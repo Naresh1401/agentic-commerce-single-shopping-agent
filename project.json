@@ -1,0 +1,16 @@
+{
+  "id": "05",
+  "repo": "agentic-commerce-single-shopping-agent",
+  "title": "Single Shopping Agent",
+  "summary": "A deterministic shopping agent that calls tools for product, price, inventory, cart, checkout, and order facts.",
+  "copy": [
+    "agents",
+    "backend/app/seed/sample_data.json"
+  ],
+  "extra_tests": {
+    "pytest.ini": "\n                [pytest]\n                pythonpath = agents .\n                addopts = -q\n            ",
+    "tests/test_single_agent.py": "\n                from single_agent import run_single_agent\n\n                def test_single_agent_calls_tools_for_milk_search():\n                    state = run_single_agent('Find organic milk under $5 near store_1001.')\n                    tools = [item.get('tool') for item in state['tool_results']]\n                    assert 'search_products' in tools\n                    assert 'get_price' in tools\n                    assert 'check_inventory' in tools\n            "
+  },
+  "verify": "python3.11 -m pytest",
+  "run": "cd agents && python3.11 single_agent.py"
+}
